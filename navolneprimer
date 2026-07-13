@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>На волне — Кальян-бар | Калининград</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cyan:#00e5ff; --cyan2:#00bcd4;
+      --dark:#05080f; --dark2:#0a0f1a;
+      --card:#0d1420; --text:#e0e8f0;
+      --muted:#7a8fa6; --gold:#c9a84c;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--dark);color:var(--text);font-family:'Montserrat',sans-serif;overflow-x:hidden;}
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:var(--dark2);}
+    ::-webkit-scrollbar-thumb{background:var(--cyan2);border-radius:3px;}
+
+    /* PARTICLES */
+    #particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+    .particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,0.15),transparent 70%);animation:float linear infinite;}
+    @keyframes float{
+      0%{transform:translateY(100vh) scale(0);opacity:0;}
+      10%{opacity:1;}90%{opacity:0.3;}
+      100%{transform:translateY(-20vh) scale(1.5);opacity:0;}
+    }
+
+    /* NAVBAR */
+    nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(5,8,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,229,255,0.1);transition:all 0.3s;}
+    nav.scrolled{padding:10px 40px;background:rgba(5,8,15,0.97);}
+    .nav-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:1.8rem;color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,0.8),0 0 40px rgba(0,229,255,0.4);letter-spacing:2px;text-decoration:none;}
+    .nav-links{display:flex;gap:30px;list-style:none;}
+    .nav-links a{color:var(--text);text-decoration:none;font-size:0.85rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.3s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--cyan);transform:scaleX(0);transition:transform 0.3s;}
+    .nav-links a:hover{color:var(--cyan);}
+    .nav-links a:hover::after{transform:scaleX(1);}
+    .nav-tg{background:linear-gradient(135deg,#0088cc,#00bcd4);color:#fff;border:none;padding:10px 22px;border-radius:25px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.8rem;letter-spacing:1px;text-transform:uppercase;transition:all 0.3s;text-decoration:none;display:flex;align-items:center;gap:8px;}
+    .nav-tg:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,188,212,0.5);}
+    .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px;}
+    .burger span{width:25px;height:2px;background:var(--cyan);border-radius:2px;transition:all 0.3s;}
+
+    /* HERO */
+    .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:1;}
+    .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,8,15,0.3) 0%,rgba(5,8,15,0.7) 60%,var(--dark) 100%),url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=1600&q=80') center/cover no-repeat;}
+    .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,229,255,0.08) 0%,transparent 70%);}
+    .hero-content{position:relative;z-index:2;text-align:center;padding:0 20px;max-width:800px;}
+    .hero-badge{display:inline-block;background:rgba(0,229,255,0.1);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;padding:8px 20px;border-radius:20px;margin-bottom:20px;animation:fadeInDown 0.8s ease;}
+    .hero-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(3.5rem,10vw,7rem);line-height:1.1;margin-bottom:20px;color:#fff;text-shadow:0 0 30px rgba(0,229,255,0.9),0 0 60px rgba(0,229,255,0.5),0 0 100px rgba(0,229,255,0.3);animation:fadeInDown 1s ease 0.2s both;}
+    .hero-sub{font-size:1.1rem;color:var(--muted);font-weight:300;letter-spacing:2px;margin-bottom:40px;animation:fadeInUp 1s ease 0.4s both;}
+    .hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeInUp 1s ease 0.6s both;}
+    .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:var(--dark);padding:14px 35px;border-radius:30px;text-decoration:none;font-weight:800;font-size:0.9rem;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s;box-shadow:0 0 30px rgba(0,229,255,0.4);}
+    .btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(0,229,255,0.6);}
+    .btn-outline{border:2px solid rgba(0,229,255,0.5);color:var(--cyan);padding:14px 35px;border-radius:30px;text-decoration:none;font-weight:700;font-size:0.9rem;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s;}
+    .btn-outline:hover{background:rgba(0,229,255,0.1);border-color:var(--cyan);transform:translateY(-3px);}
+    .hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);animation:bounce 2s infinite;cursor:pointer;z-index:2;}
+    .hero-scroll svg{width:30px;height:30px;fill:none;stroke:var(--cyan);stroke-width:2;}
+    @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-10px);}}
+    @keyframes fadeInDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+    /* SECTIONS BASE */
+    section{position:relative;z-index:1;}
+    .section-header{text-align:center;margin-bottom:60px;}
+    .section-label{font-size:0.7rem;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;display:block;}
+    .section-title{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,5vw,3.2rem);color:#fff;line-height:1.2;}
+    .section-divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);margin:20px auto 0;}
+
+    /* FEATURES */
+    .features{padding:80px 40px;background:var(--dark2);}
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;max-width:1100px;margin:0 auto;}
+    .feature-card{background:var(--card);border:1px solid rgba(0,229,255,0.08);border-radius:16px;padding:32px 24px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden;}
+    .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity 0.3s;}
+    .feature-card:hover{transform:translateY(-6px);border-color:rgba(0,229,255,0.25);}
+    .feature-card:hover::before{opacity:1;}
+    .feature-icon{font-size:2.4rem;margin-bottom:16px;display:block;}
+    .feature-name{font-weight:700;font-size:0.95rem;letter-spacing:1px;color:#fff;margin-bottom:8px;}
+    .feature-desc{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+
+    /* GALLERY */
+    .gallery{padding:80px 40px;background:var(--dark);}
+    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:1100px;margin:0 auto;}
+    .gallery-item{position:relative;overflow:hidden;border-radius:12px;cursor:pointer;}
+    .gallery-item:first-child{grid-column:span 2;}
+    .gallery-item img{width:100%;height:100%;object-fit:cover;min-height:260px;transition:transform 0.5s,filter 0.5s;filter:brightness(0.85);}
+    .gallery-item:hover img{transform:scale(1.05);filter:brightness(1);}
+    .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,229,255,0.2),transparent);opacity:0;transition:opacity 0.3s;}
+    .gallery-item:hover .gallery-overlay{opacity:1;}
+
+    /* MENU */
+    .menu{padding:80px 40px;background:var(--dark2);}
+    .menu-tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:50px;}
+    .tab-btn{background:transparent;border:1px solid rgba(0,229,255,0.25);color:var(--muted);padding:10px 24px;border-radius:25px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.3s;}
+    .tab-btn.active,.tab-btn:hover{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:var(--dark);border-color:transparent;}
+    .menu-panel{display:none;}
+    .menu-panel.active{display:block;}
+    .menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;max-width:1100px;margin:0 auto;}
+    .menu-item{background:var(--card);border:1px solid rgba(0,229,255,0.08);border-radius:14px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;transition:all 0.3s;}
+    .menu-item:hover{border-color:rgba(0,229,255,0.3);transform:translateX(4px);background:#111d2e;}
+    .menu-item-name{font-size:0.9rem;font-weight:600;color:#fff;}
+    .menu-item-price{font-weight:800;font-size:1rem;color:var(--cyan);white-space:nowrap;margin-left:16px;}
+    .menu-item-note{font-size:0.75rem;color:var(--muted);margin-top:3px;}
+
+    /* HOURS */
+    .hours{padding:80px 40px;background:var(--dark);}
+    .hours-inner{max-width:700px;margin:0 auto;background:var(--card);border:1px solid rgba(0,229,255,0.1);border-radius:20px;overflow:hidden;}
+    .hours-row{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid rgba(0,229,255,0.06);transition:background 0.2s;}
+    .hours-row:last-child{border-bottom:none;}
+    .hours-row:hover{background:rgba(0,229,255,0.04);}
+    .hours-day{font-weight:600;font-size:0.9rem;color:var(--text);}
+    .hours-time{font-weight:700;font-size:0.9rem;color:var(--cyan);}
+    .hours-row.weekend .hours-time{color:var(--gold);}
+    .hours-row.today{background:rgba(0,229,255,0.07);}
+    .today-badge{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:var(--dark);font-size:0.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-left:10px;}
+
+    /* REVIEWS */
+    .reviews{padding:80px 40px;background:var(--dark2);}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;max-width:1100px;margin:0 auto;}
+    .review-card{background:var(--card);border:1px solid rgba(0,229,255,0.08);border-radius:16px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden;}
+    .review-card::after{content:'"';position:absolute;top:10px;right:20px;font-size:5rem;color:rgba(0,229,255,0.05);font-family:Georgia,serif;line-height:1;}
+    .review-card:hover{transform:translateY(-4px);border-color:rgba(0,229,255,0.2);}
+    .review-stars{display:flex;gap:3px;margin-bottom:12px;}
+    .star{color:var(--gold);font-size:0.9rem;}
+    .review-text{font-size:0.85rem;line-height:1.7;color:var(--text);margin-bottom:16px;}
+    .review-author{display:flex;align-items:center;gap:10px;}
+    .review-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--cyan2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:var(--dark);flex-shrink:0;}
+    .review-name{font-weight:700;font-size:0.85rem;color:#fff;}
+    .review-date{font-size:0.75rem;color:var(--muted);}
+
+    /* INFO / CONTACT */
+    .info{padding:80px 40px;background:var(--dark);}
+    .info-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+    .info-block{background:var(--card);border:1px solid rgba(0,229,255,0.08);border-radius:20px;padding:36px;}
+    .info-block h3{font-size:1.1rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+    .info-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;}
+    .info-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+    .info-label{font-size:0.75rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+    .info-value{font-size:0.95rem;font-weight:600;color:#fff;}
+    .info-value a{color:#fff;text-decoration:none;transition:color 0.2s;}
+    .info-value a:hover{color:var(--cyan);}
+    .amenities{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+    .amenity-tag{background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.15);color:var(--cyan);font-size:0.75rem;font-weight:600;padding:6px 14px;border-radius:20px;}
+    .map-wrap{max-width:1100px;margin:40px auto 0;}
+    .map-wrap iframe{width:100%;height:340px;border:none;border-radius:20px;filter:brightness(0.8) saturate(0.7) hue-rotate(180deg);}
+
+    /* TG CTA */
+    .tg-cta{padding:80px 40px;background:linear-gradient(135deg,var(--dark2) 0%,#071525 100%);text-align:center;}
+    .tg-cta-inner{max-width:600px;margin:0 auto;}
+    .tg-icon{width:80px;height:80px;margin:0 auto 24px;background:linear-gradient(135deg,#0088cc,#00bcd4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.2rem;box-shadow:0 0 40px rgba(0,136,204,0.4);}
+    .tg-cta h2{font-family:'Playfair Display',serif;font-style:italic;font-size:2.2rem;color:#fff;margin-bottom:14px;}
+    .tg-cta p{color:var(--muted);font-size:0.95rem;line-height:1.7;margin-bottom:32px;}
+    .btn-tg-big{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,#0088cc,#00bcd4);color:#fff;text-decoration:none;padding:16px 40px;border-radius:35px;font-weight:800;font-size:1rem;letter-spacing:1px;text-transform:uppercase;transition:all 0.3s;box-shadow:0 0 30px rgba(0,136,204,0.4);}
+    .btn-tg-big:hover{transform:translateY(-4px);box-shadow:0 15px 50px rgba(0,136,204,0.6);}
+
+    /* FOOTER */
+    footer{background:var(--dark2);border-top:1px solid rgba(0,229,255,0.08);padding:40px 40px 30px;}
+    .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+    .footer-logo{font-family:'Playfair Display',serif;font-style:italic;font-size:1.6rem;color:var(--cyan);text-shadow:0 0 15px rgba(0,229,255,0.5);}
+    .footer-copy{font-size:0.75rem;color:var(--muted);text-align:center;}
+    .footer-links{display:flex;gap:20px;}
+    .footer-links a{color:var(--muted);font-size:0.8rem;text-decoration:none;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--cyan);}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    /* MOBILE */
+    @media(max-width:768px){
+      nav{padding:14px 20px;}
+      .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(5,8,15,0.97);flex-direction:column;align-items:center;justify-content:center;gap:40px;z-index:999;}
+      .nav-links.open{display:flex;}
+      .nav-links a{font-size:1.1rem;}
+      .burger{display:flex;z-index:1000;}
+      .nav-tg{display:none;}
+      .gallery-grid{grid-template-columns:1fr 1fr;}
+      .gallery-item:first-child{grid-column:span 2;}
+      .info-inner{grid-template-columns:1fr;}
+      .footer-inner{flex-direction:column;text-align:center;}
+      .features,.gallery,.menu,.hours,.reviews,.info,.tg-cta{padding:60px 20px;}
+    }
+  </style>
+</head><body>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">На волне</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about" onclick="closeMenu()">О нас</a></li>
+    <li><a href="#gallery" onclick="closeMenu()">Фото</a></li>
+    <li><a href="#menu" onclick="closeMenu()">Меню</a></li>
+    <li><a href="#hours" onclick="closeMenu()">Часы</a></li>
+    <li><a href="#reviews" onclick="closeMenu()">Отзывы</a></li>
+    <li><a href="#contact" onclick="closeMenu()">Контакты</a></li>
+  </ul>
+  <a href="https://t.me/+gYL8R06AEpFjZmZi" target="_blank" class="nav-tg">✈️ Telegram</a>
+  <div class="burger" id="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🌊 Кальян-бар · Калининград</div>
+    <h1 class="hero-title">На волне</h1>
+    <p class="hero-sub">Рядом с Рыбной деревней · Октябрьская, 29А</p>
+    <div class="hero-buttons">
+      <a href="tel:+79217110595" class="btn-primary">📞 Позвонить</a>
+      <a href="#menu" class="btn-outline">Меню и цены</a>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="about">
+  <div class="section-header reveal">
+    <span class="section-label">Почему мы</span>
+    <h2 class="section-title">Лучший кальян-бар Калининграда</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feature-icon">🌊</span>
+      <div class="feature-name">Атмосфера</div>
+      <div class="feature-desc">Неоновый свет, кирпичные стены и живая музыка создают уникальное настроение</div>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">💨</span>
+      <div class="feature-name">Премиум кальян</div>
+      <div class="feature-desc">Только лучший табак и уголь. Опытные кальянщики готовят специально для вас</div>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🍹</span>
+      <div class="feature-name">Барная карта</div>
+      <div class="feature-desc">Коктейли, алкоголь, кофе и безалкогольные напитки на любой вкус</div>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">📍</span>
+      <div class="feature-name">Локация</div>
+      <div class="feature-desc">Рядом с Рыбной деревней — самое сердце Калининграда</div>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🎵</span>
+      <div class="feature-name">Музыка</div>
+      <div class="feature-desc">Живые выступления и DJ-сеты каждые выходные</div>
+    </div>
+  </div>
+</section><!-- GALLERY -->
+<section class="gallery" id="gallery">
+  <div class="section-header reveal">
+    <span class="section-label">Интерьер</span>
+    <h2 class="section-title">Наша атмосфера</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1575444758702-4a6b9222336e?w=800&q=80" alt="Бар На волне"/>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&q=80" alt="Кальян"/>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1545579133-99bb5ad189be?w=600&q=80" alt="Коктейли"/>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1567696153798-9111f9cd3d0d?w=600&q=80" alt="Интерьер"/>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&q=80" alt="Кальян крупно"/>
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item reveal">
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Закуски"/>
+      <div class="gallery-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="menu">
+  <div class="section-header reveal">
+    <span class="section-label">Цены</span>
+    <h2 class="section-title">Меню и цены</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="menu-tabs">
+    <button class="tab-btn active" onclick="switchTab(event,'hookahs')">💨 Кальяны</button>
+    <button class="tab-btn" onclick="switchTab(event,'drinks')">🍹 Напитки</button>
+    <button class="tab-btn" onclick="switchTab(event,'alcohol')">🥃 Алкоголь</button>
+    <button class="tab-btn" onclick="switchTab(event,'snacks')">🍟 Закуски</button>
+  </div>
+
+  <!-- КАЛЬЯНЫ -->
+  <div class="menu-panel active" id="hookahs">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Классический кальян</div>
+          <div class="menu-item-note">Стандартная забивка</div>
+        </div>
+        <div class="menu-item-price">800 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Кальян Premium</div>
+          <div class="menu-item-note">Табак премиум-класса</div>
+        </div>
+        <div class="menu-item-price">1100 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Двойная забивка</div>
+          <div class="menu-item-note">Два вкуса в одном</div>
+        </div>
+        <div class="menu-item-price">1300 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Кальян с фруктом</div>
+          <div class="menu-item-note">Чаша из фрукта</div>
+        </div>
+        <div class="menu-item-price">1500 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Перебивка вкуса</div>
+          <div class="menu-item-note">Смена табака</div>
+        </div>
+        <div class="menu-item-price">400 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Уголь дополнительный</div>
+          <div class="menu-item-note">3 кубика</div>
+        </div>
+        <div class="menu-item-price">150 ₽</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- НАПИТКИ -->
+  <div class="menu-panel" id="drinks">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Кофе эспрессо</div>
+          <div class="menu-item-note">Двойной</div>
+        </div>
+        <div class="menu-item-price">180 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Капучино</div>
+          <div class="menu-item-note">300 мл</div>
+        </div>
+        <div class="menu-item-price">220 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Раф кофе</div>
+          <div class="menu-item-note">300 мл</div>
+        </div>
+        <div class="menu-item-price">280 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Лимонад</div>
+          <div class="menu-item-note">500 мл, авторский</div>
+        </div>
+        <div class="menu-item-price">320 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Red Bull</div>
+          <div class="menu-item-note">250 мл</div>
+        </div>
+        <div class="menu-item-price">250 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Вода минеральная</div>
+          <div class="menu-item-note">500 мл</div>
+        </div>
+        <div class="menu-item-price">120 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Чай травяной</div>
+          <div class="menu-item-note">Чайник 500 мл</div>
+        </div>
+        <div class="menu-item-price">200 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Морс ягодный</div>
+          <div class="menu-item-note">400 мл</div>
+        </div>
+        <div class="menu-item-price">240 ₽</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- АЛКОГОЛЬ -->
+  <div class="menu-panel" id="alcohol">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Виски Jack Daniel's</div>
+          <div class="menu-item-note">50 мл</div>
+        </div>
+        <div class="menu-item-price">350 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Водка Beluga</div>
+          <div class="menu-item-note">50 мл</div>
+        </div>
+        <div class="menu-item-price">280 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Джин Hendrick's</div>
+          <div class="menu-item-note">50 мл</div>
+        </div>
+        <div class="menu-item-price">320 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Пиво разливное</div>
+          <div class="menu-item-note">500 мл</div>
+        </div>
+        <div class="menu-item-price">280 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Коктейль Aperol Spritz</div>
+          <div class="menu-item-note">250 мл</div>
+        </div>
+        <div class="menu-item-price">450 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Вино бокал</div>
+          <div class="menu-item-note">150 мл</div>
+        </div>
+        <div class="menu-item-price">320 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Шампанское</div>
+          <div class="menu-item-note">Бокал 150 мл</div>
+        </div>
+        <div class="menu-item-price">350 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Мохито классик</div>
+          <div class="menu-item-note">300 мл</div>
+        </div>
+        <div class="menu-item-price">420 ₽</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАКУСКИ -->
+  <div class="menu-panel" id="snacks">
+    <div class="menu-grid">
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Чипсы Pringles</div>
+          <div class="menu-item-note">165 г</div>
+        </div>
+        <div class="menu-item-price">250 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Орешки микс</div>
+          <div class="menu-item-note">100 г</div>
+        </div>
+        <div class="menu-item-price">180 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Сухарики</div>
+          <div class="menu-item-note">С соусом</div>
+        </div>
+        <div class="menu-item-price">150 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Нарезка фруктовая</div>
+          <div class="menu-item-note">Сезонные фрукты</div>
+        </div>
+        <div class="menu-item-price">380 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Шоколад Toblerone</div>
+          <div class="menu-item-note">100 г</div>
+        </div>
+        <div class="menu-item-price">200 ₽</div>
+      </div>
+      <div class="menu-item">
+        <div>
+          <div class="menu-item-name">Мармелад</div>
+          <div class="menu-item-note">100 г</div>
+        </div>
+        <div class="menu-item-price">160 ₽</div>
+      </div>
+    </div>
+  </div>
+</section><!-- HOURS -->
+<section class="hours" id="hours">
+  <div class="section-header reveal">
+    <span class="section-label">Режим работы</span>
+    <h2 class="section-title">Мы открыты для вас</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="hours-inner">
+    <div class="hours-row" id="day-1">
+      <div class="hours-day">Понедельник</div>
+      <div class="hours-time">15:00 — 02:00</div>
+    </div>
+    <div class="hours-row" id="day-2">
+      <div class="hours-day">Вторник</div>
+      <div class="hours-time">15:00 — 02:00</div>
+    </div>
+    <div class="hours-row" id="day-3">
+      <div class="hours-day">Среда</div>
+      <div class="hours-time">15:00 — 02:00</div>
+    </div>
+    <div class="hours-row" id="day-4">
+      <div class="hours-day">Четверг</div>
+      <div class="hours-time">15:00 — 02:00</div>
+    </div>
+    <div class="hours-row weekend" id="day-5">
+      <div class="hours-day">Пятница</div>
+      <div class="hours-time">15:00 — 04:00</div>
+    </div>
+    <div class="hours-row weekend" id="day-6">
+      <div class="hours-day">Суббота</div>
+      <div class="hours-time">15:00 — 04:00</div>
+    </div>
+    <div class="hours-row weekend" id="day-0">
+      <div class="hours-day">Воскресенье</div>
+      <div class="hours-time">15:00 — 02:00</div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="section-header reveal">
+    <span class="section-label">Отзывы</span>
+    <h2 class="section-title">Что говорят гости</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="review-text">Лучший кальян-бар в Калининграде! Атмосфера просто космос — неоновый свет, крутая музыка и очень вкусный кальян. Персонал внимательный и доброжелательный. Обязательно вернёмся!</p>
+      <div class="review-author">
+        <div class="review-avatar">А</div>
+        <div>
+          <div class="review-name">Алексей К.</div>
+          <div class="review-date">2 недели назад</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="review-text">Были с подругами на девичнике — всё прошло идеально! Расположение у Рыбной деревни — просто сказка. Кальяны горят отлично, коктейли вкусные. Персонал очень вежливый и внимательный!</p>
+      <div class="review-author">
+        <div class="review-avatar">М</div>
+        <div>
+          <div class="review-name">Мария Л.</div>
+          <div class="review-date">1 месяц назад</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="review-text">Заходили спонтанно после прогулки по набережной. Очень уютно, приятная музыка, кальян на высоте. Цены адекватные для такого уровня заведения. Теперь это наше любимое место!</p>
+      <div class="review-author">
+        <div class="review-avatar">Д</div>
+        <div>
+          <div class="review-name">Дмитрий В.</div>
+          <div class="review-date">3 недели назад</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="review-text">Приезжаем в Калининград каждый год и каждый раз заходим сюда. Место постоянно развивается, меню обновляется. Кальянщики — настоящие профессионалы своего дела!</p>
+      <div class="review-author">
+        <div class="review-avatar">С</div>
+        <div>
+          <div class="review-name">Светлана П.</div>
+          <div class="review-date">2 месяца назад</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="review-text">Отмечали день рождения — организовали всё на высшем уровне. Отдельное спасибо кальянщику Максиму — профессионал! Точно будем возвращаться снова и снова.</p>
+      <div class="review-author">
+        <div class="review-avatar">И</div>
+        <div>
+          <div class="review-name">Игорь Н.</div>
+          <div class="review-date">1 неделю назад</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="review-stars">
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span><span class="star">★</span>
+        <span class="star">★</span>
+      </div>
+      <p class="review-text">Уютное место с отличной атмосферой. Кальян горит ровно весь вечер, персонал следит за углём. Очень понравились авторские лимонады. Рекомендую всем друзьям!</p>
+      <div class="review-author">
+        <div class="review-avatar">Е</div>
+        <div>
+          <div class="review-name">Екатерина М.</div>
+          <div class="review-date">5 дней назад</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section class="info" id="contact">
+  <div class="section-header reveal">
+    <span class="section-label">Контакты</span>
+    <h2 class="section-title">Как нас найти</h2>
+    <div class="section-divider"></div>
+  </div>
+  <div class="info-inner">
+    <div class="info-block reveal">
+      <h3>📍 Информация</h3>
+      <div class="info-row">
+        <span class="info-icon">📍</span>
+        <div>
+          <div class="info-label">Адрес</div>
+          <div class="info-value">г. Калининград, ул. Октябрьская, 29А<br/>Рядом с Рыбной деревней</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">📞</span>
+        <div>
+          <div class="info-label">Телефон</div>
+          <div class="info-value"><a href="tel:+79217110595">+7 (921) 711-05-95</a></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">✈️</span>
+        <div>
+          <div class="info-label">Telegram-канал</div>
+          <div class="info-value"><a href="https://t.me/+gYL8R06AEpFjZmZi" target="_blank">Подписаться</a></div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">🕐</span>
+        <div>
+          <div class="info-label">Режим работы</div>
+          <div class="info-value">Пн–Чт, Вс: 15:00–02:00<br/>Пт–Сб: 15:00–04:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-block reveal">
+      <h3>✨ Удобства</h3>
+      <div class="info-row">
+        <span class="info-icon">🎉</span>
+        <div>
+          <div class="info-label">Мероприятия</div>
+          <div class="info-value">Принимаем брони на дни рождения, девичники и корпоративы</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">🚗</span>
+        <div>
+          <div class="info-label">Парковка</div>
+          <div class="info-value">Бесплатная парковка рядом с заведением</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <span class="info-icon">💳</span>
+        <div>
+          <div class="info-label">Оплата</div>
+          <div class="info-value">Наличные и банковские карты</div>
+        </div>
+      </div>
+      <div class="info-label" style="margin-top:20px;margin-bottom:12px;">Мы предлагаем</div>
+      <div class="amenities">
+        <span class="amenity-tag">🌐 Wi-Fi</span>
+        <span class="amenity-tag">🎵 Живая музыка</span>
+        <span class="amenity-tag">🎂 Банкеты</span>
+        <span class="amenity-tag">🚬 Кальян</span>
+        <span class="amenity-tag">🍹 Бар</span>
+        <span class="amenity-tag">📸 Фотозона</span>
+      </div>
+    </div>
+  </div>
+  <div class="map-wrap reveal">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2279.123456789!2d20.507!3d54.707!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTTCsDQyJzI1LjIiTiAyMMKwMzAnMjUuMiJF!5e0!3m2!1sru!2sru!4v1234567890"
+      allowfullscreen=""
+      loading="lazy">
+    </iframe>
+  </div>
+</section><!-- TELEGRAM CTA -->
+<section class="tg-cta">
+  <div class="tg-cta-inner reveal">
+    <div class="tg-icon">✈️</div>
+    <h2>Будь в курсе событий</h2>
+    <p>Подписывайся на наш Telegram-канал — акции, новинки меню, анонсы мероприятий и специальные предложения только для подписчиков</p>
+    <a href="https://t.me/+gYL8R06AEpFjZmZi" target="_blank" class="btn-tg-big">
+      ✈️ Подписаться на канал
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">На волне</div>
+    <div class="footer-copy">
+      © 2024 Кальян-бар «На волне» · Калининград, ул. Октябрьская, 29А<br/>
+      <span style="font-size:0.7rem;opacity:0.5;">Курение вредит вашему здоровью. 18+</span>
+    </div>
+    <div class="footer-links">
+      <a href="tel:+79217110595">📞 Позвонить</a>
+      <a href="https://t.me/+gYL8R06AEpFjZmZi" target="_blank">✈️ Telegram</a>
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+  // --- PARTICLES ---
+  (function(){
+    const container = document.getElementById('particles');
+    for(let i = 0; i < 25; i++){
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 120 + 40;
+      p.style.cssText = `
+        width:${size}px;
+        height:${size}px;
+        left:${Math.random()*100}%;
+        animation-duration:${Math.random()*20+15}s;
+        animation-delay:${Math.random()*15}s;
+        opacity:${Math.random()*0.4+0.1};
+      `;
+      container.appendChild(p);
+    }
+  })();
+
+  // --- NAVBAR SCROLL ---
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 50){
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
+
+  // --- BURGER MENU ---
+  function toggleMenu(){
+    const links = document.getElementById('navLinks');
+    const burger = document.getElementById('burger');
+    links.classList.toggle('open');
+    burger.classList.toggle('open');
+    const spans = burger.querySelectorAll('span');
+    if(burger.classList.contains('open')){
+      spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+    } else {
+      spans[0].style.transform = '';
+      spans[1].style.opacity = '';
+      spans[2].style.transform = '';
+    }
+  }
+  function closeMenu(){
+    const links = document.getElementById('navLinks');
+    const burger = document.getElementById('burger');
+    links.classList.remove('open');
+    burger.classList.remove('open');
+    burger.querySelectorAll('span').forEach(s => {
+      s.style.transform = '';
+      s.style.opacity = '';
+    });
+  }
+
+  // --- MENU TABS ---
+  function switchTab(e, id){
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  // --- HIGHLIGHT TODAY IN HOURS ---
+  (function(){
+    const today = new Date().getDay();
+    const row = document.getElementById('day-' + today);
+    if(row){
+      row.classList.add('today');
+      const dayDiv = row.querySelector('.hours-day');
+      const badge = document.createElement('span');
+      badge.className = 'today-badge';
+      badge.textContent = 'Сегодня';
+      dayDiv.appendChild(badge);
+    }
+  })();
+
+  // --- REVEAL ON SCROLL ---
+  (function(){
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if(entry.isIntersecting){
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  })();
+
+  // --- SMOOTH SCROLL FOR ANCHORS ---
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e){
+      const target = document.querySelector(this.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        const offset = 70;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
